@@ -1,5 +1,14 @@
 ## Technology choices
 
+### Scala Json Library
+
+#### Spray-Json
+Well documented, bad interface, marshall/unmarshall methods all throw exception [BAD]
+
+#### Play-json
+Wrapper on jackson, does provides safe method that does not throw, slightly better than in this respect, well documented.
+
+
 ### Database
 
 Things to consider
@@ -31,4 +40,13 @@ Things to consider
 
 #### Kinesis
 
-Using kinesis (KPL) does not gives at-least-1 semantic
+Using kinesis (KPL) does not gives at-least-1 semantic, meaning it relies on application to ensure delivery, which is not suitable in many cases.
+
+### DevOps
+
+#### Auto-scaling
+EC2 Auto-scale is pretty fast, around 30 secs in ideal case for C4.Large, but it does not tell about how long it's gonna take to
+1. Register your instance to ELB
+2. Application starts
+
+Also, there's no SLA for speed of scaling out/in
