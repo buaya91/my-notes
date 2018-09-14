@@ -50,3 +50,11 @@ question myself about
 Reason 1: I am too eager to prove myself, and this often backfire
 
 I need to learn that slowing down is beneficial for me, and also my team.
+
+### Fixing issue: I failed to understand the problem at hand, and gave a wrong responses
+
+My first reaction should always be reproduce the error, find out the root cause,
+verify if the root cause is correct by trial and error.
+
+I should not try to make guess and shoot into the dark.
+

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <title></title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/reveal.css">
+  <style type="text/css">code{white-space: pre;}</style>
+  <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/theme/black.css" id="theme">
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? 'http://lab.hakim.se/reveal-js/css/print/pdf.css' : 'http://lab.hakim.se/reveal-js/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script>
+  <!--[if lt IE 9]>
+  <script src="http://lab.hakim.se/reveal-js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+
+<section id="raft---distributed-consensus-protocol" class="slide level1">
+<h1>Raft - Distributed Consensus Protocol</h1>
+<figure>
+<img src="" alt="img" /><figcaption>img</figcaption>
+</figure>
+</section>
+<section class="slide level1">
+
+<h3 id="problem-linearizability-with-replicated-state-machine">Problem: Linearizability with replicated state machine?</h3>
+<figure>
+<img src="https://raw.githubusercontent.com/buaya91/image-storage/master/raft-presentation/linearizability.png" alt="hoho" /><figcaption>hoho</figcaption>
+</figure>
+</section>
+<section class="slide level1">
+
+<h3 id="properties">Properties</h3>
+<ol type="1">
+<li>Guarantee linearizability (ie. No stale read)</li>
+<li>Single Leader Model, ie. throughput does not scale with no of nodes</li>
+</ol>
+</section>
+<section class="slide level1">
+
+<h3 id="topology">Topology</h3>
+<figure>
+<img src="https://raw.githubusercontent.com/buaya91/image-storage/master/raft-presentation/raft-happy-path1.png" alt="im" /><figcaption>im</figcaption>
+</figure>
+</section>
+<section class="slide level1">
+
+<h3 id="sub-problems">Sub-Problems</h3>
+<ol type="1">
+<li>Leader Election</li>
+<li>Data Replication</li>
+</ol>
+</section>
+<section class="slide level1">
+
+<h3 id="leader-election">Leader election</h3>
+<figure>
+<img src="https://raw.githubusercontent.com/buaya91/image-storage/master/raft-presentation/leader-election1.png" alt="img" /><figcaption>img</figcaption>
+</figure>
+</section>
+<section class="slide level1">
+
+<figure>
+<img src="https://raw.githubusercontent.com/buaya91/image-storage/master/raft-presentation/leader-election2.png" />
+</figure>
+<h3 id="how-does-follower-decide-to-vote">How does follower decide to vote?</h3>
+<ul>
+<li>Only 1 vote</li>
+<li>One vote for Candidate that is <strong>UP_TO_DATE</strong>
+<ul>
+<li>Term</li>
+<li>Log Index</li>
+</ul></li>
+<li>If Candidate detect leader, convert to follower</li>
+</ul>
+</section>
+<section class="slide level1">
+
+<h3 id="log-replication">Log Replication</h3>
+<figure>
+<img src="???" alt="step1" /><figcaption>step1</figcaption>
+</figure>
+</section>
+<section class="slide level1">
+
+<figure>
+<img src="???" alt="step1" /><figcaption>step1</figcaption>
+</figure>
+<table style="width:10%;">
+<colgroup>
+<col style="width: 9%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><img src="???" alt="step1" /></td>
+</tr>
+</tbody>
+</table>
+<h3 id="log-vs-state">Log vs State</h3>
+<p>Log: Similar to event in event sourcing, eg. data that represent command coming from client State: Similar to snapshot</p>
+</section>
+<section class="slide level1">
+
+<h3 id="how-does-follower-decide-whether-to-accept-the-log">How does follower decide whether to accept the log?</h3>
+<ol type="1">
+<li>Leader is not from older Term.</li>
+<li>Leader and Follower does not have conflict.
+<ul>
+<li>If there's conflict, follower will modify the log to reflect's Leader's log</li>
+</ul></li>
+</ol>
+</section>
+<section class="slide level1">
+
+<h3 id="majority-rule">Majority rule</h3>
+<ul>
+<li>Leader requires majority votes</li>
+<li>Commit Log requires majority votes</li>
+<li>Read/Write only works when majority reach consensus</li>
+</ul>
+<p>Majority rule helps * prevent divergence on Leader election * ensure no stale read</p>
+</section>
+<section class="slide level1">
+
+<h3 id="read-protocol">Read Protocol</h3>
+<p>Same majority rule, only serves Read when majority agreed.</p>
+</section>
+<section class="slide level1">
+
+<h3 id="write-protocol">Write Protocol</h3>
+<ol type="1">
+<li>Leader get consensus among majority</li>
+<li>Commit</li>
+<li>Return OK to client (OK guarantee linearizability)</li>
+</ol>
+</section>
+<section class="slide level1">
+
+<h3 id="leader-failed-after-commit-before-return">Leader failed after commit, before return</h3>
+<ol type="1">
+<li>Img illustration (Fail before commit)</li>
+<li>Implications: client might make the same call twice</li>
+<li>Solution: client request comes with unique id</li>
+</ol>
+</section>
+    </div>
+  </div>
+
+  <script src="http://lab.hakim.se/reveal-js/lib/js/head.min.js"></script>
+  <script src="http://lab.hakim.se/reveal-js/js/reveal.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: 'http://lab.hakim.se/reveal-js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/zoom-js/zoom.js', async: true },
+              { src: 'http://lab.hakim.se/reveal-js/plugin/notes/notes.js', async: true }
+        ]
+      });
+    </script>
+    </body>
+</html>
