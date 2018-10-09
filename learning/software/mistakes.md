@@ -58,3 +58,6 @@ verify if the root cause is correct by trial and error.
 
 I should not try to make guess and shoot into the dark.
 
+### Whenever proposing non-trivial change, always prepare a comprehensive argument and tradeoff
+
+### Stop cracking jokes that's borderline offensive, you can't handle that
